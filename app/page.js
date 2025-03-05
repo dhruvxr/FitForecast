@@ -15,7 +15,10 @@ const Page = () => {
          <a href="/week-4" style={{ color: 'blue' }}>Week 4 Page</a> 
       </p>
       <p>
-        Visit the <a href="/week-5" style={{ color: 'blue' }}>Week 5 Page</a> for the latest assignments.
+         <a href="/week-5" style={{ color: 'blue' }}>Week 5 Page</a> 
+      </p>
+      <p>
+        Visit the <a href="/week-6" style={{ color: 'blue' }}>Week 6 Page</a> for the latest assignments.
       </p>
     </div>
   );

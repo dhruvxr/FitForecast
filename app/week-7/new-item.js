@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export default function NewItem({ onAddItem }) {
   const [itemName, setItemName] = useState('');
-  const [quantity, setQuantity] = useState(1); // Default quantity starts at 1
+  const [quantity, setQuantity] = useState(1); 
   const [category, setCategory] = useState('Produce');
 
   const handleSubmit = (event) => {
@@ -13,20 +13,19 @@ export default function NewItem({ onAddItem }) {
       return;
     }
 
-    // Create a new item object
+    
     const newItem = {
-      id: Math.random().toString(36).substr(2, 9), // Generate a random ID
+      id: Math.random().toString(36).substr(2, 9), 
       name: itemName,
       quantity: quantity,
       category: category,
     };
 
-    // Call the onAddItem function passed as a prop
+    
     onAddItem(newItem);
 
-    // Clear form fields after submission
     setItemName('');
-    setQuantity(1); // Reset quantity to 1 after submission
+    setQuantity(1); 
     setCategory('Produce');
   };
 

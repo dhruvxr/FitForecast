@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from 'react';
-import Item from './item'; // Correct the path to Item component
-import items from './items.json'; // Correct path for the JSON file
+import Item from './item';
+import items from './items.json'; 
 
 const ItemList = () => {
   const [sortBy, setSortBy] = useState('name');
 
-  // Sorting the items based on the selected sort criteria
   const sortedItems = [...items].sort((a, b) => {
     if (sortBy === 'name') {
       return a.name.localeCompare(b.name);

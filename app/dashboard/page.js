@@ -17,11 +17,16 @@ export default function Dashboard() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (usr) => {
-      if (!usr) router.push('/login')
-      else setUser(usr)
+      if (!usr) {
+        router.push('/login')
+        return
+      }
+      setUser(usr)
     })
+  
     return unsub
   }, [router])
+  
 
   useEffect(() => {
     async function fetchWeather() {

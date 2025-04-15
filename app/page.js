@@ -1,40 +1,34 @@
-import React from 'react';
+'use client'
 
+import Link from 'next/link'
 
-const Page = () => {
+export default function HomePage() {
   return (
-    <div>
-      <h1>CPRG 306: Web Development 2 - Assignments</h1> 
-      <p>
-         <a href="/week-2" style={{ color: 'blue' }}>Week 2 Page</a> 
-      </p>
-      <p>
-         <a href="/week-3" style={{ color: 'blue' }}>Week 3 Page</a> 
-      </p>
-      <p>
-         <a href="/week-4" style={{ color: 'blue' }}>Week 4 Page</a> 
-      </p>
-      <p>
-         <a href="/week-5" style={{ color: 'blue' }}>Week 5 Page</a> 
-      </p>
-      <p>
-         <a href="/week-6" style={{ color: 'blue' }}>Week 6 Page</a> 
-      </p>
-      <p>
-         <a href="/week-7" style={{ color: 'blue' }}>Week 7 Page</a> 
-      </p>      
-      <p>
-         <a href="/week-8" style={{ color: 'blue' }}>Week 8 Page</a> 
-      </p> 
-      <p>
-         <a href="/week-9" style={{ color: 'blue' }}>Week 9 Page</a> 
-      </p>
-      <p>
-        Visit the <a href="/week-10" style={{ color: 'blue' }}>Week 10 Page</a> for the latest assignments.
-      </p>
+    <div className="flex items-center justify-center min-h-screen bg-[#3B0CA7] px-4">
+      <div className="bg-black w-full max-w-sm rounded-3xl px-8 py-10 shadow-xl text-center space-y-6">
+        {/* Logo */}
+        <img src="/logo.png" alt="Logo" className="mx-auto h-16" />
+
+        {/* Title + Tagline */}
+        <h1 className="text-3xl font-bold">FitForecast</h1>
+        <p className="text-sm text-gray-300">Your perfect fit, forecasted.</p>
+
+        {/* Buttons */}
+        <div className="space-y-4">
+          <Link
+            href="/login"
+            className="block w-full text-center bg-blue-600 text-white py-3 rounded-full font-semibold hover:bg-blue-700 transition"
+          >
+            Login
+          </Link>
+          <Link
+            href="/signup"
+            className="block w-full text-center bg-green-600 text-white py-3 rounded-full font-semibold hover:bg-green-700 transition"
+          >
+            Sign Up
+          </Link>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
-
-export default Page;
-

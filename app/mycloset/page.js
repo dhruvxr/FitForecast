@@ -1,43 +1,53 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { auth, firestore } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react'
+import { auth, firestore } from '@/lib/firebase'
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore'
+import { onAuthStateChanged } from 'firebase/auth'
+import { useRouter } from 'next/navigation'
 
 export default function MyCloset() {
-  const [items, setItems] = useState([]);
-  const router = useRouter();
+  const [items, setItems] = useState([])
+  const router = useRouter()
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) return router.push('/login');
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.push('/login')
+        return
+      }
 
-      const q = query(collection(firestore, 'clothes'), where('userId', '==', user.uid));
+      const q = query(collection(firestore, 'clothes'), where('userId', '==', user.uid))
       const unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
-        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setItems(data);
-      });
+        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+        setItems(data)
+      })
 
-      return () => unsubscribeSnapshot();
-    });
+      return () => unsubscribeSnapshot()
+    })
 
-    return () => unsubscribe();
-  }, [router]);
+    return () => unsubscribeAuth()
+  }, [router])
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this item?');
-    if (!confirmDelete) return;
+    const confirmDelete = window.confirm('Are you sure you want to delete this item?')
+    if (!confirmDelete) return
 
     try {
-      await deleteDoc(doc(firestore, 'clothes', id));
-      alert('Item deleted successfully.');
+      await deleteDoc(doc(firestore, 'clothes', id))
+      alert('Item deleted successfully.')
     } catch (err) {
-      console.error('Delete error:', err);
-      alert('Failed to delete item.');
+      console.error('Delete error:', err)
+      alert('Failed to delete item.')
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-[#3B0CA7] text-white px-4 py-10">
@@ -71,5 +81,5 @@ export default function MyCloset() {
         )}
       </div>
     </div>
-  );
+  )
 }

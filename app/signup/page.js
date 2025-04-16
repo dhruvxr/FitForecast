@@ -1,67 +1,91 @@
 'use client'
 
-import { useForm } from 'react-hook-form';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function SignupPage() {
-  const { register, handleSubmit } = useForm();
-  const router = useRouter();
+  const { register, handleSubmit } = useForm()
+  const router = useRouter()
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const onSubmit = async (data) => {
-    try {
-      await createUserWithEmailAndPassword(auth, data.email, data.password);
-      router.push('/dashboard');
-    } catch (error) {
-      alert('Signup failed');
+    setError('')
+    setLoading(true)
+
+    if (!data.email || !data.password || data.password.length < 6) {
+      setError('Email and password must be valid. Password must be at least 6 characters.')
+      setLoading(false)
+      return
     }
-  };
+
+    try {
+      await createUserWithEmailAndPassword(auth, data.email, data.password)
+      router.push('/dashboard')
+    } catch (err) {
+      console.error(err)
+      // Firebase provides descriptive error codes
+      if (err.code === 'auth/email-already-in-use') {
+        setError('Email already in use.')
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Invalid email address.')
+      } else {
+        setError('Sign up failed. Please try again.')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#3B0CA7] px-4">
-      <div className="bg-black p-8 rounded-3xl w-full max-w-sm space-y-6 shadow-xl text-center">
-        <img src="/logo.png" alt="Logo" className="mx-auto h-14" />
-        <h1 className="text-3xl font-semibold tracking-wide">FitForecasted</h1>
-        <p className="text-sm text-gray-300">Your Perfect Fit, Forecasted</p>
+    <div className="min-h-screen bg-[#3B0CA7] flex items-center justify-center px-4">
+      <div className="bg-black rounded-3xl p-8 max-w-md w-full text-center shadow-xl">
+        <img src="/logo.svg" alt="FitForecast Logo" className="mx-auto h-12 mb-4" />
+        <h2 className="text-2xl font-bold mb-4 text-white">FitForecasted</h2>
+        <p className="text-sm text-gray-300 mb-6">Your Perfect Fit, Forecasted</p>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-left">
           <input
-            type="text"
-            placeholder="Full Name"
-            {...register('name')}
-            required
-            className="w-full rounded-full px-4 py-2 bg-[#F5F3E7] text-black"
-          />
-          <input
-            type="email"
-            placeholder="Email ID"
             {...register('email')}
-            required
-            className="w-full rounded-full px-4 py-2 bg-[#F5F3E7] text-black"
+            type="email"
+            placeholder="Email"
+            className="w-full rounded-full px-5 py-3 bg-[#F5F3E7] text-black placeholder-gray-500"
           />
           <input
+            {...register('password')}
             type="password"
             placeholder="Password"
-            {...register('password')}
-            required
-            className="w-full rounded-full px-4 py-2 bg-[#F5F3E7] text-black"
+            className="w-full rounded-full px-5 py-3 bg-[#F5F3E7] text-black placeholder-gray-500"
           />
 
-          <label className="text-xs text-gray-400 block text-left">
-          <input type="checkbox" className="mr-2" required />
-            By checking this box, you agree to our terms and conditions.
-          </label>
+          <div className="flex items-center text-white text-sm gap-2">
+            <input type="checkbox" className="form-checkbox" required />
+            <span>By checking this box, you agree to our terms and conditions.</span>
+          </div>
 
+          {error && <p className="text-red-400 text-sm">{error}</p>}
 
           <button
             type="submit"
-            className="bg-[#B5AFFF] text-black font-bold rounded-full py-2 hover:bg-[#a89ff3]"
+            disabled={loading}
+            className={`w-full ${
+              loading ? 'bg-gray-500' : 'bg-purple-600 hover:bg-purple-700'
+            } text-white font-bold py-3 rounded-full`}
           >
-            Sign Up
+            {loading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
+
+        <p className="mt-4 text-gray-400 text-sm">
+          Already have an account?{' '}
+          <a href="/login" className="text-blue-400 hover:underline">
+            Log in
+          </a>
+        </p>
       </div>
     </div>
-  );
+  )
 }

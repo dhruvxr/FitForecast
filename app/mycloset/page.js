@@ -57,17 +57,17 @@ export default function MyCloset() {
         {items.length === 0 ? (
           <p className="text-center text-gray-300">No items uploaded yet.</p>
         ) : (
-          <div className="space-y-4">
+          <div className="overflow-y-auto max-h-[70vh] space-y-6 pr-2">
             {items.map((item) => (
               <div key={item.id} className="bg-[#1E1E1E] text-white rounded-xl p-4 shadow-md">
                 <p className="text-lg font-semibold">{item.name}</p>
-                <p className="text-sm text-gray-400 mb-2">{item.description}</p>
-                <p className="text-sm text-purple-300 mb-2">Type: {item.type}</p>
+                <p className="text-sm text-gray-400 mb-1">{item.description}</p>
+                <p className="text-sm text-purple-300 mb-1">Type: {item.type}</p>
                 <p className="text-sm text-purple-300 mb-2">Tags: {item.tags?.join(', ')}</p>
                 <img
                   src={item.imageUrl}
                   alt={item.name}
-                  className="w-full max-h-60 object-cover rounded-lg mt-2 mb-4"
+                  className="w-full max-h-64 object-contain rounded-lg mt-2 mb-4"
                 />
                 <button
                   onClick={() => handleDelete(item.id)}

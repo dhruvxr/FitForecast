@@ -61,10 +61,10 @@ export default function SignupPage() {
             className="w-full rounded-full px-5 py-3 bg-[#F5F3E7] text-black placeholder-gray-500"
           />
 
-          <div className="flex items-center text-white text-sm gap-2">
-            <input type="checkbox" className="form-checkbox" required />
-            <span>By checking this box, you agree to our terms and conditions.</span>
-          </div>
+          <label className="text-xs text-gray-400 block text-left">
+          <input type="checkbox" className="mr-2" required />
+            By checking this box, you agree to our terms and conditions.
+          </label>
 
           {error && <p className="text-red-400 text-sm">{error}</p>}
 

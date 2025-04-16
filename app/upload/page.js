@@ -12,23 +12,34 @@ export default function UploadPage() {
   const router = useRouter();
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
 
   const onSubmit = async (data) => {
-    if (!file) return alert('Please select an image.');
+    setError('');
     const user = auth.currentUser;
-    if (!user) return alert('You must be logged in.');
+
+    if (!user) {
+      setError('You must be logged in.');
+      return;
+    }
+
+    if (!file) {
+      setError('Please select an image to upload.');
+      return;
+    }
 
     try {
       setUploading(true);
+
       const storageRef = ref(storage, `clothes/${Date.now()}_${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on(
         'state_changed',
         null,
-        (error) => {
-          console.error(error);
-          alert('Image upload failed');
+        (err) => {
+          console.error(err);
+          setError('Image upload failed.');
           setUploading(false);
         },
         async () => {
@@ -40,7 +51,9 @@ export default function UploadPage() {
             tags: data.tags || [],
             createdAt: new Date(),
           };
+
           await addDoc(collection(firestore, 'clothes'), payload);
+
           alert('Item uploaded successfully!');
           setUploading(false);
           reset();
@@ -50,7 +63,7 @@ export default function UploadPage() {
       );
     } catch (err) {
       console.error(err);
-      alert('Upload error');
+      setError('Upload error. Please try again.');
       setUploading(false);
     }
   };
@@ -66,20 +79,22 @@ export default function UploadPage() {
             placeholder="Clothing Name"
             className="w-full rounded-full px-5 py-3 bg-[#F5F3E7] text-black placeholder-gray-500"
           />
+
           <input
             {...register('description')}
             placeholder="Description"
             className="w-full rounded-full px-5 py-3 bg-[#F5F3E7] text-black placeholder-gray-500"
           />
+
           <input
             {...register('type')}
-            placeholder="Type (e.g. Jacket, Shirt)"
+            placeholder="Type (e.g. Hoodie, Pants)"
             className="w-full rounded-full px-5 py-3 bg-[#F5F3E7] text-black placeholder-gray-500"
           />
 
           <div className="text-white">Suitable For:</div>
           <div className="flex flex-wrap gap-2">
-            {['cold', 'rainy', 'hot', 'windy'].map((tag) => (
+            {['cold', 'hot', 'rainy', 'windy'].map((tag) => (
               <label key={tag} className="bg-[#F5F3E7] text-black px-4 py-2 rounded-full cursor-pointer">
                 <input
                   {...register('tags')}
@@ -99,10 +114,12 @@ export default function UploadPage() {
             className="block w-full text-sm text-gray-300 mt-2"
           />
 
+          {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
+
           <button
             type="submit"
             disabled={uploading}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-full"
+            className={`w-full ${uploading ? 'bg-gray-500' : 'bg-purple-600 hover:bg-purple-700'} text-white font-bold py-3 rounded-full`}
           >
             {uploading ? 'Uploading...' : 'Upload Item'}
           </button>

@@ -43,7 +43,7 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-[#3B0CA7] flex items-center justify-center px-4">
       <div className="bg-black rounded-3xl p-8 max-w-md w-full text-center shadow-xl">
-        <img src="/logo.svg" alt="FitForecast Logo" className="mx-auto h-12 mb-4" />
+        <img src="/logo.png" alt="FitForecast Logo" className="mx-auto h-12 mb-4" />
         <h2 className="text-2xl font-bold mb-4 text-white">FitForecasted</h2>
         <p className="text-sm text-gray-300 mb-6">Your Perfect Fit, Forecasted</p>
 

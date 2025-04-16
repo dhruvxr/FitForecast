@@ -18,6 +18,8 @@ export default function MyCloset() {
   const router = useRouter()
 
   useEffect(() => {
+    let unsubscribeSnapshot = () => {}
+
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (!user) {
         router.push('/login')
@@ -25,15 +27,17 @@ export default function MyCloset() {
       }
 
       const q = query(collection(firestore, 'clothes'), where('userId', '==', user.uid))
-      const unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
+      unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
         const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
         setItems(data)
       })
-
-      return () => unsubscribeSnapshot()
     })
 
-    return () => unsubscribeAuth()
+    // ✅ Cleanup both the auth and firestore listeners
+    return () => {
+      unsubscribeSnapshot()
+      unsubscribeAuth()
+    }
   }, [router])
 
   const handleDelete = async (id) => {
